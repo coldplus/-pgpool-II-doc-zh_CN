@@ -1,6 +1,6 @@
 # pgpool-II 4.5.4 中文文档
 
-
+本文档翻译自官方文档英文版: [pgpool-II 4.5.4 Documentation](https://www.pgpool.net/docs/latest/en/html/index.html)。
 
 # 目录
 
