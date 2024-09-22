@@ -6,7 +6,7 @@
 
 ## 前言
 
-什么是Pgpool II？
+[什么是Pgpool II？](What is Pgpool-II.md)
 
 Pgpool II简史
 
