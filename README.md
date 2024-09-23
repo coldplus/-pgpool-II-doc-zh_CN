@@ -6,7 +6,7 @@
 
 ## 前言
 
-[什么是Pgpool II？](What is Pgpool-II.md)
+[什么是Pgpool II？](What_is_Pgpool-II.md)
 
 Pgpool II简史
 
@@ -20,25 +20,25 @@ Pgpool II简史
 
 ## 一、教程
 
-1. [入门](Chapter 1 Getting Started.md)
+1. [入门](Chapter_1_Getting_Started.md)
 
 ## 二、服务器管理
 
-2. [Pgpool II安装](Chapter 2 Installation of Pgpool-II.md)
+2. [Pgpool II安装](Chapter_2_Installation_of_Pgpool-II.md)
 
-3. [服务器设置和操作](Chapter 3 Server Setup and Operation.md)
+3. [服务器设置和操作](Chapter_3_Server_Setup_and_Operation.md)
 
-4. [看门狗](Chapter 4 Watchdog.md)
+4. [看门狗](Chapter_4_Watchdog.md)
 
-5. [服务器配置](Chapter 5 Server Configuration.md)
+5. [服务器配置](Chapter_5_Server_Configuration.md)
 
-6. [客户端身份验证](Chapter 6 Client Authentication.md)
+6. [客户端身份验证](Chapter_6_Client_Authentication.md)
 
-7. [性能考虑](Chapter 7 Performance Considerations.md)
+7. [性能考虑](Chapter_7_Performance_Considerations.md)
 
 ## 三、 示例
 
-8. [配置示例](Chapter 8 Configuration Examples.md)
+8. [配置示例](Chapter_8_Configuration_Examples.md)
 
 ## 四、 参考
 

@@ -441,7 +441,7 @@ host    replication     repl               samenet                 scram-sha-256
 
 然后将公钥id_rsa_pgpool.pub添加到每台服务器上的/var/lib/pgsql/.ssh/authorized_keys文件中。
 
-设置SSH后，确保可以运行SSHpostgres@serverX-i~/.ssh/id_rsa_pgpool命令作为postgres用户登录到每台服务器，无需输入密码。
+设置SSH后，确保可以运行ssh postgres@serverX -i ~/.ssh/id_rsa_pgpool命令作为postgres用户登录到每台服务器，无需输入密码。
 
 > [!CAUTION]
 > 注意：如果您使用SSH公钥身份验证登录失败，请检查以下内容：
@@ -525,9 +525,9 @@ pgpool:4aa0cb9673e84b06d4c8a848c80eb5d0
 
 ### 8.2.7. Pgpool-II配置
 
-使用YUM安装Pgpool-II时，Pgpool-II配置文件Pgpool.conf安装在/etc/pgpool-II中。
+使用YUM安装Pgpool-II时，Pgpool-II配置文件pgpool.conf安装在/etc/pgpool-II中。
 
-由于从Pgpool II 4.2开始，所有主机上的所有配置参数都是相同的，因此您可以在任何Pgpool节点上编辑Pgpool.conf，并将编辑后的pgpool.conf文件复制到其他pgpool节点。
+由于从Pgpool II 4.2开始，所有主机上的所有配置参数都是相同的，因此您可以在任何Pgpool节点上编辑pgpool.conf，并将编辑后的pgpool.conf文件复制到其他pgpool节点。
 
 #### 8.2.7.1. 集群模式
 
@@ -565,7 +565,7 @@ sr_check_password = ''
 
 #### 8.2.7.5. 健康检查
 
-启用健康检查，以便Pgpool-II执行故障转移。此外，如果网络不稳定，即使后端运行正常，健康检查也会失败，可能会发生故障转移或退化操作。为了防止这种健康检查的错误检测，我们设置health_check_max_retrys=3。以与sr_check_user和sr_check_password相同的方式指定health_check_uuser和health_ccheck_password。
+启用健康检查，以便Pgpool-II执行故障转移。此外，如果网络不稳定，即使后端运行正常，健康检查也会失败，可能会发生故障转移或退化操作。为了防止这种健康检查的错误检测，我们设置health_check_max_retrys=3。以与sr_check_user和sr_check_password相同的方式指定health_check_user和health_check_password。
 
 ```shell
 health_check_period = 5
@@ -708,6 +708,13 @@ PGHOME=/usr/pgsql-16
 ```
 
 为了使用在线恢复功能，需要pgpool_recovery、pgpool_remote_start、pgpool_switch_xlog函数，因此我们需要在PostgreSQL服务器server1的template1上安装pgpool_rerecovery。
+
+```shell
+[server1]# su - postgres
+[server1]$ psql template1 -c "CREATE EXTENSION pgpool_recovery"
+```
+
+
 
 > [!CAUTION]
 > 注意：recovery_1st_stage脚本不支持表空间。如果您正在使用表空间，则需要修改脚本以支持表空间。
