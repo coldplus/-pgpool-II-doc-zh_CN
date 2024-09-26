@@ -8,13 +8,13 @@
 
 [什么是Pgpool II？](What_is_Pgpool-II.md)
 
-Pgpool II简史
+[Pgpool II简史](A_Brief_History_of_Pgpool-II.md)
 
-惯例
+[约定](Conventions.md)
 
-更多信息
+[更多信息](Further_Information.md)
 
-限制
+[限制](Restrictions.md)
 
 错误报告指南
 
