@@ -42,13 +42,13 @@
 
 ## 四、 参考
 
-1. 服务器命令
+1. [服务器命令](1_Server_commands.md)
 
 2. PCP命令
 
 3. 其他命令
 
-4. SQL类型命令
+4. [SQL类型命令](4_SQL_type_commands.md)
 
 5. pgpool_adm扩展
 
