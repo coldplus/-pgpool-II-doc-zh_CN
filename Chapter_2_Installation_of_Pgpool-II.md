@@ -1,30 +1,32 @@
 # 第2章 安装Pgpool II
 
+[TOC]
+
 ## 2.1. 规划
 
 由于Pgpool-II是管理PostgreSQL的工具，我们需要先决定如何部署它们。此外，可以安装多个Pgpool-II，以提高Pgpool-II本身的可用性。我们需要事先计划需要安装多少Pgpool-II。在本章中，我们首先讨论PostgreSQL的运行模式，然后讨论Pgpool-II的部署。
 
 ### 2.1.1. PostgreSQL的集群模式
 
-PostgreSQL的安装次数可以多于或等于一次，通常会安装两次以上，因为如果只有一次安装，如果PostgreSQL不可用，整个数据库系统都会崩溃。当我们使用两个或多个PostgreSQL服务器时，有必要以某种方式同步数据库。我们将同步数据库的方法称为“集群运行模式”。有史以来最流行的模式是“流式复制模式”。除非需要特别考虑，否则建议使用流式复制模式。有关运行模式的更多详细信息，请参阅第3.3.2节。
+PostgreSQL可以安装一个或多个，通常会安装两个以上，因为如果只有一个，当PostgreSQL不可用时，整个数据库系统都会崩溃。当我们使用两个或多个PostgreSQL服务器时，有必要以某种方式同步数据库。我们将同步数据库的方法称为“clustering running mode（集群运行模式）”。有史以来最流行的模式是“streaming replication mode（流式复制模式）”。除非需要特别考虑，否则建议使用流式复制模式。有关运行模式的更多详细信息，请参阅第3.3.2节。
 
-接下来我们需要考虑的是我们想要安装多少PostgreSQL。如果有两个，我们可以继续操作数据库系统。然而，如果你想通过在多个服务器上运行多个读取查询来实现读取查询负载平衡，使用两个以上的PostgreSQL并不罕见。Pgpool-II提供了丰富的选项来调整负载平衡。更多详细信息请参见第5.8节。
+接下来我们需要考虑的是我们想要安装多少个PostgreSQL。如果有两个，我们可以继续操作数据库系统。然而，如果你想通过在多个服务器上通过读取查询负载平衡来运行多个读取查询，使用两个以上的PostgreSQL并不罕见。Pgpool-II提供了丰富的选项来调整负载平衡。更多详细信息请参见第5.8节。
 
-由于稍后可以在Pgpool-II中添加PostgreSQL服务器，因此两个PostgreSQL可能是一个很好的起点。
+可以通过Pgpool-II中添加PostgreSQL服务器，因此两个PostgreSQL可能是一个很好的起点。
 
 ### 2.1.2. Pgpool-II的部署
 
-虽然可以只使用一个Pgpool-II，但我们建议使用多个PgpoolII，以避免由于Pgpool-II关闭而导致整个数据库不可用。多个Pgpool-II协同工作并相互监控。其中一个被称为“领导者”，它有一个虚拟IP。客户不需要知道有多个Pgpool-II，因为他们总是访问同一个VIP。（监视器见第4.1节）。如果Pgpool-II中的一个发生故障，另一个Pgpool-II将接管领导角色。
+虽然可以只使用一个Pgpool-II，但我们建议使用多个PgpoolII，以避免由于Pgpool-II关闭而导致整个数据库不可用。多个Pgpool-II协同工作并相互监控。其中一个被称为“leader”，它有一个虚拟IP。客户不需要知道有多个Pgpool-II，因为他们总是访问同一个VIP。（监视器见第4.1节）。如果Pgpool-II中的一个发生故障，另一个Pgpool-II将接管leader角色。
 
-由于不允许有多名领导人，监督机构会投票决定新的领导人。如果Pgpool-II的数量是偶数，则不可能通过投票决定新领导人。因此，我们建议部署大于或等于3个奇数的Pgpool-II。
+由于不允许有多个leader，监视器会投票决定新的leader。如果Pgpool-II的数量是偶数，则不可能通过投票决定新leader。因此，我们建议部署大于或等于3个奇数的Pgpool-II。
 
-请注意，Pgpool-II和PostgreSQL可以放在同一台服务器上。例如，你只能有三台服务器在每台服务器上运行Pgpool-II和PostgreSQL。
+请注意，Pgpool-II和PostgreSQL可以放在同一台服务器上。例如，你可以只有三台服务器在每台服务器上运行Pgpool-II和PostgreSQL。
 
 您可以在第8.2节中找到一个生产级的详细示例，该示例使用三个Pgpool-II和两个PostgreSQL在流式复制模式下，供那些今天想要安装生产级Pgpool-II的人使用。
 
 ## 2.2. Pgpool II的安装
 
-本章介绍Pgpool-II的安装。首先，解释从源代码分发安装。然后解释从RPM软件包安装。
+本章介绍Pgpool-II的安装。首先介绍从源代码进行安装。然后介绍从RPM软件包安装。
 
 ## 2.3. 要求
 
@@ -32,7 +34,7 @@ PostgreSQL的安装次数可以多于或等于一次，通常会安装两次以�
 
 构建Pgpool-II需要以下软件包：
 
-- 需要GNU make 3.80或更高版本；其他make程序或较旧的GNU make版本将无法运行。（GNU make有时以gmake的名义安装。）要测试GNU make，请输入：
+- 需要GNU make 3.80或更高版本；其他make程序或较旧的GNU make版本将无法运行。（有的GNU make安装名字是gmake。）要测试GNU make，请输入：
 
 ```shell
 make --version
@@ -44,18 +46,18 @@ make --version
 
 - 安装Pgpool-II需要几个PostgreSQL包。您可以从rpm安装postgresql-libs和postgresql-devel包。
 
-如果你是从Git树构建而不是使用已发布的源代码包，或者如果你想进行服务器开发，你还需要以下包：
+如果你是从Git树构建而不是使用已发布的源代码包，或者如果你想进行服务开发，你还需要以下包：
 
-- Flex和Bison需要从Git签出构建，或者如果您更改了实际的扫描程序和解析器定义文件。如果你需要它们，一定要购买Flex 2.5.31或更高版本和Bison 1.875或更高型号。其他lex和yacc程序无法使用。
+- Flex和Bison需要从Git签出构建，或者如果您更改了实际的扫描程序和解析器定义文件。如果你需要它们，一定要获取Flex 2.5.31或更高版本和Bison 1.875或更高型号。其他lex和yacc程序无法使用。
 
 
 如果你需要一个GNU软件包，你可以在当地的GNU镜像站点找到它（参见http://www.gnu.org/order/ftp.html列表）或ftp://ftp.gnu.org/gnu/。
 
-还要检查是否有足够的磁盘空间。编译期间，源代码树大约需要40 MB，安装目录大约需要20 MB。如果你要运行回归测试，你暂时需要额外的4GB。使用df命令检查可用磁盘空间。
+还要检查是否有足够的磁盘空间。编译期间，源代码树大约需要40 MB，安装目录大约需要20 MB。如果你要运行回归测试，你暂时需要额外的4 GB。使用df命令检查可用磁盘空间。
 
 ## 2.4. 获取来源
 
-Pgpool II 4.5.4的来源可以从我们网站的下载部分获得：http://www.pgpool.net.您应该得到一个名为pgpool-II-4.5.4.tar.gz的文件。获取文件后，解压缩它：
+Pgpool II 4.5.4的源代码可以从官方网站下载：http://www.pgpool.net.您应该得到一个名为pgpool-II-4.5.4.tar.gz的文件。获取文件后，解压缩它：
 
 ```shell
 tar xf pgpool-II-4.5.4.tar.gz
@@ -65,9 +67,9 @@ tar xf pgpool-II-4.5.4.tar.gz
 
 ## 2.5. 安装Pgpool-II
 
-提取源代码tarball后，按照以下步骤构建源代码并安装Pgpool-II。
+提取源代码tarball后，按照以下步骤编译源代码并安装Pgpool-II。
 
-自PgpoolII4.5以来，autoconf/autoreconf生成的configure等文件已从存储库中删除，因此请先运行autoreconf-fi以生成configure。
+自Pgpool-II 4.5以来，由autoconf/autoreconf生成的configure等文件已从存储库中删除，因此请先运行autoreconf -fi以生成configure。
 
 ```shell
 dnf install libtool
@@ -82,7 +84,7 @@ autoreconf -fi
 ./configure
 ```
 
-您可以通过提供以下一个或多个命令行选项进行配置来自定义构建和安装过程：
+您可以通过提供以下一个或多个命令行选项运行configure来自定义编译和安装过程：
 
 --prefix=path
 
@@ -94,7 +96,7 @@ autoreconf -fi
 
 --with-openssl
 
-​	Pgpool-II二进制文件将使用OpenSSL支持构建。如果您计划使用AES256加密对密码进行加密，您也需要此选项。更多详细信息请参见第6.4节。默认情况下，OpenSSL支持已禁用。
+​	Pgpool-II二进制文件将使用OpenSSL编译。如果您计划使用AES256加密对密码进行加密，您也需要此选项。更多详细信息请参见第6.4节。默认情况下关闭OpenSSL支持。
 
 --enable-sequence-lock
 
@@ -110,7 +112,7 @@ autoreconf -fi
 
 --with-pam
 
-​	Pgpool-II二进制文件将使用PAM身份验证支持构建。默认情况下禁用PAM身份验证支持。
+​	Pgpool-II二进制文件将使用PAM身份验证编译。默认情况下关闭PAM身份验证支持。
 
 编译源文件。
 
@@ -128,9 +130,9 @@ make install
 
 ## 2.6. 安装pgpool_recovery
 
-当您使用描述后者的在线恢复时，Pgpool-II需要Pgpool_recovery、Pgpool_remote_start和Pgpool_switch_xlog功能。还有管理工具的pgpoolAdmin，使用pgpool_pgctl在屏幕上停止、重新启动或重新加载PostgreSQL。如果这些功能先安装在template1中就足够了。并非所有数据库都需要安装这些功能。
+当使用在线恢复时，Pgpool-II需要pgpool_recovery、pgpool_remote_start和pgpool_switch_xlog功能。还有管理工具的pgpoolAdmin，使用pgpool_pgctl在停止、重启或重新加载PostgreSQL。这些功能安装在template1中就足够了。并非所有数据库都需要安装这些功能。
 
-这是所有Pgpool II安装所必需的。
+这是所有Pgpool-II安装所必需的。
 
 ```shell
 $ cd pgpool-II-4.5.4/src/sql/pgpool-recovery
@@ -151,7 +153,7 @@ $ psql template1
 $ psql -f pgpool-recovery.sql template1
 ```
 
-使用Pgpool II 3.3或更高版本，您需要调整postgresql.conf。假设pg_ctl的路径是/usr/local/pgsql/bin/pg_ctl。然后将以下内容添加到postgresql.conf中。
+使用Pgpool-II 3.3或更高版本，您需要调整postgresql.conf。假设pg_ctl的路径是/usr/local/pgsql/bin/pg_ctl。然后将以下内容添加到postgresql.conf中。
 
 ```shell
 pgpool.pg_ctl = '/usr/local/pgsql/bin/pg_ctl'
@@ -250,7 +252,7 @@ Pgpool-II需要PostgreSQL的库和扩展目录。由于特定PostgreSQL版本的
 
 ### 2.10.1. 安装前
 
-由于PostgreSQL YUM存储库中也包含了与Pgpool-II相关的包，如果已经安装了PostgreSQL存储库包，请将“排除”设置添加到/etc/YUM.repos.d/pgdg-redhat-all.repo中，这样Pgpool-II就不会从PostgreSQL YUM仓库安装。如果Pgpool-II和PostgreSQL安装在不同的服务器上，您可以跳过本节。
+由于PostgreSQL YUM存储库中也包含了与Pgpool-II相关的包，如果已经安装了PostgreSQL存储库包，请将“exclude”设置添加到/etc/YUM.repos.d/pgdg-redhat-all.repo中，这样Pgpool-II就不会从PostgreSQL YUM仓库安装。如果Pgpool-II和PostgreSQL安装在不同的服务器上，您可以跳过本节。
 
 ```shell
 vi /etc/yum.repos.d/pgdg-redhat-all.repo

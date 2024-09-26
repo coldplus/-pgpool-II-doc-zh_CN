@@ -28,7 +28,7 @@ Pgpool II简史
 
 3. [服务器设置和操作](Chapter_3_Server_Setup_and_Operation.md)
 
-4. [看门狗](Chapter_4_Watchdog.md)
+4. [监视器](Chapter_4_Watchdog.md)
 
 5. [服务器配置](Chapter_5_Server_Configuration.md)
 

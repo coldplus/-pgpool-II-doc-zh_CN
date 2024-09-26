@@ -258,7 +258,7 @@ $ for port in 5432 5433 5434; do
 | 9000                   | watchdog accepts connections                       |                                                              |
 | 9694                   | UDP port for receiving Watchdog's heartbeat signal |                                                              |
 | Config file            | /etc/pgpool-II/pgpool.conf                         | Pgpool-II config file                                        |
-| User running Pgpool-II | postgres (Pgpool-II 4.1 or later)                  | Pgpool-II 4.0 or before, the default user running Pgpool-II is root |
+| User running Pgpool-II | postgres (Pgpool-II 4.1 or later)                  | 在Pgpool-II 4.0版本或更早版本中，运行Pgpool-II的默认用户是root |
 | Running mode           | streaming replication mode                         | -                                                            |
 | Watchdog               | on                                                 | Life check method: heartbeat                                 |
 
@@ -266,11 +266,11 @@ $ for port in 5432 5433 5434; do
 
 | Feature         | Script                                                   | Detail                                                       |
 | --------------- | -------------------------------------------------------- | ------------------------------------------------------------ |
-| Failover        | /etc/pgpool-II/sample_scripts/failover.sh.sample         | Run by [failover_command](https://www.pgpool.net/docs/latest/en/html/runtime-config-failover.html#GUC-FAILOVER-COMMAND) to perform failover |
-| Failover        | /etc/pgpool-II/sample_scripts/follow_primary.sh.sample   | Run by [follow_primary_command](https://www.pgpool.net/docs/latest/en/html/runtime-config-failover.html#GUC-FOLLOW-PRIMARY-COMMAND) to synchronize the Standby with the new Primary after failover. |
-| Online recovery | /etc/pgpool-II/sample_scripts/recovery_1st_stage.sample  | Run by [recovery_1st_stage_command](https://www.pgpool.net/docs/latest/en/html/runtime-online-recovery.html#GUC-RECOVERY-1ST-STAGE-COMMAND) to recovery a Standby node |
-| Online recovery | /etc/pgpool-II/sample_scripts/pgpool_remote_start.sample | Run after [recovery_1st_stage_command](https://www.pgpool.net/docs/latest/en/html/runtime-online-recovery.html#GUC-RECOVERY-1ST-STAGE-COMMAND) to start the Standby node |
-| Watchdog        | /etc/pgpool-II/sample_scripts/escalation.sh.sample       | Optional Configuration. Run by [wd_escalation_command](https://www.pgpool.net/docs/latest/en/html/runtime-watchdog-config.html#GUC-WD-ESCALATION-COMMAND) to switch the Leader/Standby Pgpool-II safely |
+| Failover        | /etc/pgpool-II/sample_scripts/failover.sh.sample         | 通过执行[failover_command]来进行故障转移                     |
+| Failover        | /etc/pgpool-II/sample_scripts/follow_primary.sh.sample   | 在故障转移后，运行[follow_primary_command]来使备用服务器与新主服务器同步 |
+| Online recovery | /etc/pgpool-II/sample_scripts/recovery_1st_stage.sample  | 通过执行[recovery_1st_stage_command]来恢复备用节点           |
+| Online recovery | /etc/pgpool-II/sample_scripts/pgpool_remote_start.sample | 在[recovery_1st_stage_command]执行之后，启动备用节点         |
+| Watchdog        | /etc/pgpool-II/sample_scripts/escalation.sh.sample       | 可选配置。通过执行[wd_escalation_command]来安全地切换主/备Pgpool-II的领导者角色 |
 
 上述脚本包含在RPM包中，可以根据需要进行自定义。
 
@@ -353,7 +353,7 @@ Initialize PostgreSQL on the primary server.
 [server1]$ /usr/pgsql-16/bin/initdb -D $PGDATA
 ```
 
-然后，我们按如下方式编辑服务器1（主）上的配置文件$PGDATA/postgresql.conf。启用wal_log_hints以使用pg_rewind。由于主服务器稍后可能会变为备用服务器，我们将hot_Standby设置为on。
+然后，我们按如下方式编辑`server1`（主）上的配置文件$PGDATA/postgresql.conf。启用`wal_log_hints`以使用`pg_rewind`。由于主服务器稍后可能会变为备用服务器，我们将`hot_Standby`设置为`on`。
 
 ```shell
 listen_addresses = '*'
@@ -366,7 +366,7 @@ hot_standby = on
 wal_log_hints = on
 ```
 
-Start PostgreSQL primary server on `server1`.
+在`server1`上启动PostgreSQL主服务器。
 
 ```shell
 [server1]# su - postgres
@@ -377,7 +377,7 @@ Start PostgreSQL primary server on `server1`.
 
 有多种方法可以设置备用服务器，例如：
 
-- 使用pg_basebackup从备用备份主数据目录。
+- 使用`pg_basebackup`从备用备份主数据目录。
 
 - 使用Pgpool-II的在线恢复功能（第5.11节）自动设置备用服务器。
 
@@ -386,9 +386,9 @@ Start PostgreSQL primary server on `server1`.
 
 #### 8.2.4.3. 设置PostgreSQL用户
 
-PostgreSQL用户需要使用Pgpool-II的健康检查和复制延迟检查功能。出于安全原因，我们创建了一个名为pgpool的专用用户，用于流式复制延迟检查和健康检查。并创建一个名为repl的专用用户进行复制。因为在线恢复功能需要超级用户权限，所以我们在这里使用postgres用户。
+PostgreSQL用户需要使用Pgpool-II的健康检查和复制延迟检查功能。出于安全原因，我们创建了一个名为`pgpool`的专用用户，用于流式复制延迟检查和健康检查。并创建一个名为`repl`的专用用户进行复制。因为在线恢复功能需要超级用户权限，所以我们在这里使用`postgres`用户。
 
-自Pgpool-II 4.0以来，支持scram-sha-256身份验证。此配置示例使用scram-sha-256身份验证方法。首先，设置password_encryption='scram-sha-256'，然后创建用户。
+自Pgpool-II 4.0以来，支持scram-sha-256身份验证。此配置示例使用scram-sha-256身份验证方法。首先，设置`password_encryption='scram-sha-256'`，然后创建用户。
 
 表8-6 用户
 
@@ -408,14 +408,14 @@ postgres=# \password repl
 postgres=# \password postgres
 ```
 
-要在show POOL NODES命令结果中显示replication_state和replication_sync_state列，角色pgpool需要是PostgreSQL超级用户或pg_monitor组中（pgpool II 4.1或更高版本）。将pg_monitor授予pgpool：
+要在`SHOW POOL NODES`命令结果中显示`replication_state`和`replication_sync_state`列，角色`pgpool`需要是PostgreSQL超级用户或`pg_monitor`组中（pgpool II 4.1或更高版本）。将`pg_monitor`授予`pgpool`：
 
 ```shell
 GRANT pg_monitor TO pgpool;
 ```
 
 > [!CAUTION]
-> 注意：如果您计划使用detach_false_maprimary（Pgpool-II 4.0或更高版本），角色“pgpool”需要是PostgreSQL超级用户或pg_monitor组中的角色才能使用此功能。
+> 注意：如果您计划使用detach_false_maprimary（Pgpool-II 4.0或更高版本），角色“pgpool”需要是PostgreSQL超级用户或`pg_monitor`组中的角色才能使用此功能。
 
 假设所有Pgpool-II服务器和PostgreSQL服务器都在同一个子网中，编辑pg_hba.conf以启用scram-sha-256身份验证方法。
 
@@ -427,7 +427,7 @@ host    replication     repl               samenet                 scram-sha-256
 
 #### 8.2.4.4. 设置SSH公钥身份验证
 
-要使用Pgpool II的自动故障转移和在线恢复，需要使用postgres用户（默认用户Pgpool II以.Pgpool II 4.0或更早版本运行，默认用户为root）对所有后端服务器配置SSH公钥身份验证（无密码SSH登录）。
+要使用Pgpool II的自动故障转移和在线恢复，需要使用`postgres`用户（Pgpool-II运行的默认用户，在Pgpool-II 4.0版本或更早版本中，默认用户是`root`。）对所有后端服务器配置SSH公钥身份验证（无密码SSH登录）。
 
 在所有服务器上执行以下命令，使用RSA算法生成密钥对。在这个例子中，我们假设生成的密钥文件名是id_rsa_pgpool。
 
@@ -460,7 +460,7 @@ host    replication     repl               samenet                 scram-sha-256
 
 #### 8.2.4.5. 创建.pgpass
 
-为了允许repl用户不指定流式复制和在线恢复的密码，并使用postgres执行pg_rewind，我们在postgres-user的主目录中创建.pgpass文件，并将每个PostgreSQL服务器上的权限更改为600。此文件允许repl用户和postgres用户使用，而无需为流式复制和故障转移提供密码。
+为了允许`repl`用户流式复制和在线恢复的不输入密码，并使用`postgres`执行`pg_rewind`，我们在`postgres`用户的主目录中创建.pgpass文件，并将每个PostgreSQL服务器上的权限更改为600。此文件允许`repl`用户和`postgres`用户使用，而无需为流式复制和故障转移提供密码。
 
 ```shell
 [all servers]# su - postgres
@@ -486,7 +486,7 @@ server3:5432:postgres:postgres:<postgres user password>
 
 ### 8.2.5. 创建pgpool_node_id
 
-从Pgpool-II 4.2开始，现在所有主机上的所有配置参数都是相同的。如果启用了看门狗功能，为了区分哪个主机是哪个主机，需要一个pgpool_node_id文件。您需要创建一个pgpool_node_id文件，并指定pgpool（看门狗）节点号（例如0、1、2…）来标识pgpool（监视器）主机。
+从Pgpool-II 4.2开始，现在所有主机上的所有配置参数都是相同的。如果启用了监视器功能，为了区分哪个主机是哪个主机，需要一个pgpool_node_id文件。您需要创建一个pgpool_node_id文件，并指定pgpool（监视器）节点号（例如0、1、2…）来标识pgpool（监视器）主机。
 
 - server1
 
@@ -546,7 +546,7 @@ listen_addresses = '*'
 pcp_listen_addresses = '*'
 ```
 
-#### 8.2.7.3. 港口
+#### 8.2.7.3. 端口
 
 指定端口号Pgpool-II侦听。
 
@@ -816,7 +816,7 @@ wd_port2 = 9000
 pgpool_port2 = 9999
 ```
 
-配置生命检查方法wd_lifecheck_method和生命检查间隔wd_interval。在这里，我们使用心跳方法来执行看门狗生命检查。
+配置生命检查方法wd_lifecheck_method和生命检查间隔wd_interval。在这里，我们使用心跳方法来执行监视器生命检查。
 
 ```shell
 wd_lifecheck_method = 'heartbeat'
@@ -844,7 +844,7 @@ wd_heartbeat_keepalive = 2
 wd_heartbeat_deadtime = 30
 ```
 
-此设置是可选的。当看门狗进程异常终止时，新旧活动pgpool节点上的虚拟IP都可能“启动”。为防止这种情况，请配置wd_scalation_command，在新的领导者Pgpool-II节点上启动虚拟IP之前，先关闭其他PgpoolII节点上的虚拟IP。
+此设置是可选的。当监视器进程异常终止时，新旧活动pgpool节点上的虚拟IP都可能“启动”。为防止这种情况，请配置wd_scalation_command，在新的领导者Pgpool-II节点上启动虚拟IP之前，先关闭其他PgpoolII节点上的虚拟IP。
 
 ```shell
 wd_escalation_command = '/etc/pgpool-II/escalation.sh'
@@ -869,7 +869,7 @@ DEVICE=enp0s8
 ```
 
 > [!CAUTION]
-> 注意：如果你有偶数个看门狗节点，你需要打开enable_consensus_with_half_votes参数。
+> 注意：如果你有偶数个监视器节点，你需要打开enable_consensus_with_half_votes参数。
 
 > [!CAUTION]
 > 注意：如果use_watchdog=on，请确保在pgpool_node_id文件中指定了pgpool节点号。详见第8.2.5节。
@@ -1117,9 +1117,9 @@ node_id | hostname | port | status | lb_weight |  role   | select_cnt | load_bal
 
 本节显示了如何配置Pgpool-II复制模式和快照隔离模式的示例。
 
-在第8.2节描述的流式复制模式下，复制由PostgreSQL的流式副本功能执行。然而，在本机复制模式下，Pgpool-II通过将写查询路由到所有PostgreSQL服务器来执行复制。
+在第8.2节描述的流式复制模式下，复制由PostgreSQL的流式副本功能执行。然而，在原生复制模式（native replication mode）下，Pgpool-II通过将写查询路由到所有PostgreSQL服务器来执行复制。
 
-快照隔离模式类似于本机复制模式，除了它增加了节点之间的可见性一致性。
+快照隔离模式（Snapshot Isolation Mode）类似于原生复制模式，但它在节点之间增加了可见性一致性。
 
 PostgreSQL 14在这个配置示例中使用。所有脚本都已经用PostgreSQL 10和更高版本进行了测试。
 
@@ -1127,7 +1127,7 @@ PostgreSQL 14在这个配置示例中使用。所有脚本都已经用PostgreSQL
 
 在这个例子中，我们使用一个Pgpool-II和三个PostgreSQL服务器来描述如何配置和使用Pgpool-II的复制。
 
-在这个例子中，我们使用了3台安装了CentOS 7.9的服务器。让这些服务器为服务器1、服务器2、服务器3。我们在所有服务器上安装PostgreSQL，在服务器1上安装Pgpool-II。
+在这个例子中，我们使用了3台安装了CentOS 7.9的服务器。让这些服务器为server1、server2、server3。我们在所有服务器上安装PostgreSQL，在server1上安装Pgpool-II。
 
 在这个例子中，我们使用最小设置来配置复制。在生产环境中，建议启用监视器以避免单点故障。有关监视器配置的更多详细信息，请参阅第8.2.7.10节。
 
