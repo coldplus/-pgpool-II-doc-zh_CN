@@ -44,7 +44,7 @@
 
 1. [服务器命令](1_Server_commands.md)
 
-2. PCP命令
+2. [PCP命令](2_PCP_commands.md)
 
 3. 其他命令
 
