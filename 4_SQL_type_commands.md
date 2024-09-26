@@ -4,19 +4,19 @@
 
 **目录**
 
-- [PGPOOL SHOW](#PGPOOL SHOW) -- 显示配置参数的值
-- [PGPOOL SET](#PGPOOL SET) -- 更改配置参数
-- [PGPOOL RESET](#PGPOOL RESET) --将配置参数的值还原为默认值
-- [SHOW POOL STATUS](#SHOW POOL STATUS) -- 显示配置参数列表及其名称、值和描述
-- [SHOW POOL NODES](#SHOW POOL NODES) -- 显示所有已配置节点的列表
-- [SHOW POOL_PROCESSES](#SHOW POOL_PROCESSES) -- 显示所有等待连接和处理连接的Pgpool-II进程的列表
-- [SHOW POOL_POOLS](#SHOW POOL_POOLS) -- 返回由Pgpool-II处理的池列表
-- [SHOW POOL_VERSION](#SHOW POOL_VERSION) -- 显示一个包含Pgpool-II版本号的字符串
-- [SHOW POOL_CACHE](#SHOW POOL_CACHE) -- 显示缓存存储统计信息
-- [SHOW POOL_HEALTH_CHECK_STATS](#SHOW POOL_HEALTH_CHECK_STATS) -- 显示健康检查统计数据
-- [SHOW POOL_BACKEND_STATS](#SHOW POOL_BACKEND_STATS) -- 显示后端SQL命令统计信息
+- [PGPOOL SHOW](#PGPOOL_SHOW) -- 显示配置参数的值
+- [PGPOOL SET](#PGPOOL_SET) -- 更改配置参数
+- [PGPOOL RESET](#PGPOOL_RESET) --将配置参数的值还原为默认值
+- [SHOW POOL STATUS](#SHOW_POOL_STATUS) -- 显示配置参数列表及其名称、值和描述
+- [SHOW POOL NODES](#SHOW_POOL_NODES) -- 显示所有已配置节点的列表
+- [SHOW POOL_PROCESSES](#SHOW_POOL_PROCESSES) -- 显示所有等待连接和处理连接的Pgpool-II进程的列表
+- [SHOW POOL_POOLS](#SHOW_POOL_POOLS) -- 返回由Pgpool-II处理的池列表
+- [SHOW POOL_VERSION](#SHOW_POOL_VERSION) -- 显示一个包含Pgpool-II版本号的字符串
+- [SHOW POOL_CACHE](#SHOW_POOL_CACHE) -- 显示缓存存储统计信息
+- [SHOW POOL_HEALTH_CHECK_STATS](#SHOW_POOL_HEALTH_CHECK_STATS) -- 显示健康检查统计数据
+- [SHOW POOL_BACKEND_STATS](#SHOW_POOL_BACKEND_STATS) -- 显示后端SQL命令统计信息
 
-# PGPOOL SHOW
+# PGPOOL_SHOW
 
 ## 名字
 
@@ -136,7 +136,7 @@ ssl                      | off                     | Enables SSL support for fro
 
 [PGPOOL SET](#PGPOOL SET)
 
-# PGPOOL SET
+# PGPOOL_SET
 
 ## 名字
 
@@ -176,7 +176,7 @@ PGPOOL SET log_min_messages TO INFO;
 
 [PGPOOL RESET](#PGPOOL RESET), [PGPOOL SHOW](#PGPOOL SHOW)
 
-# PGPOOL RESET
+# PGPOOL_RESET
 
 ## 名字
 
@@ -191,7 +191,7 @@ PGPOOL RESET ALL
 
 ## 描述
 
-`PGPOOL RESET`命令将PGPOOL-II配置参数的值恢复为默认值。默认值被定义为如果在当前会话中没有为参数发出`PGPOOL SET`，则参数将具有的值。此命令类似于[`RESET`](https://www.postgresql.org/docs/current/static/sql-reset.html)PostgreSQL中的命令，并添加`PGPOOL`关键字，以将其与PostgreSQL RESET命令区分开来。	
+`PGPOOL RESET`命令将PGPOOL-II配置参数的值恢复为默认值。默认值被定义为如果在当前会话中没有为参数发出`PGPOOL SET`，则参数将具有的值。此命令类似于[`RESET`](https://www.postgresql.org/docs/current/static/sql-reset.html)PostgreSQL中的命令，并添加`PGPOOL`关键字，以将其与PostgreSQL RESET命令区分开来。
 
 ## 参数
 
@@ -221,7 +221,7 @@ PGPOOL RESET ALL;
 
 [PGPOOL SET](#PGPOOL SET), [PGPOOL SHOW](#PGPOOL SHOW)
 
-# SHOW POOL STATUS
+# SHOW_POOL_STATUS
 
 ## 名字
 
@@ -243,7 +243,7 @@ SHOW POOL_STATUS
 
 [PGPOOL SHOW](#PGPOOL SHOW)
 
-# SHOW POOL NODES
+# SHOW_POOL_NODES
 
 ## 名字
 
@@ -252,7 +252,7 @@ SHOW POOL_NODES -- 显示所有已配置节点的列表
 ## 简介
 
 ```sql
-SHOW POOL_NODES  
+SHOW POOL_NODES
 ```
 
 ## 描述
@@ -267,14 +267,14 @@ SHOW POOL_NODES
 
 ```sql
 test=# show pool_nodes;
- node_id | hostname | port  | status | pg_status | lb_weight |  role   | pg_role | select_cnt | load_balance_node | replication_delay | replication_state | replication_sync_state | last_status_change  
+ node_id | hostname | port  | status | pg_status | lb_weight |  role   | pg_role | select_cnt | load_balance_node | replication_delay | replication_state | replication_sync_state | last_status_change
 ---------+----------+-------+--------+-----------+-----------+---------+---------+------------+-------------------+-------------------+-------------------+------------------------+---------------------
  0       | /tmp     | 11002 | up     | up        | 0.500000  | primary | primary | 0          | false             | 0                 |                   |                        | 2021-02-27 15:10:19
  1       | /tmp     | 11003 | up     | up        | 0.500000  | standby | standby | 0          | true              | 0                 | streaming         | async                  | 2021-02-27 15:10:19
 (2 rows)
 ```
 
-# SHOW POOL_PROCESSES
+# SHOW_POOL_PROCESSES
 
 ## 名字
 
@@ -323,7 +323,7 @@ test=# show pool_processes;
 (8 rows)
 ```
 
-# SHOW POOL_POOLS
+# SHOW_POOL_POOLS
 
 ## Name
 
@@ -369,7 +369,7 @@ SHOW POOL_POOLS
 
 ```sql
 test=# show pool_pools;
- pool_pid |     start_time      | client_connection_count | pool_id | backend_id | database | username | backend_connection_time | client_connection_time | client_disconnection_time | client_idle_duration | majorversion | minorversion | pool_counter | pool_backendpid | pool_connected |       status        | load_balance_node 
+ pool_pid |     start_time      | client_connection_count | pool_id | backend_id | database | username | backend_connection_time | client_connection_time | client_disconnection_time | client_idle_duration | majorversion | minorversion | pool_counter | pool_backendpid | pool_connected |       status        | load_balance_node
 ----------+---------------------+-------------------------+---------+------------+----------+----------+-------------------------+------------------------+---------------------------+----------------------+--------------+--------------+--------------+-----------------+----------------+---------------------+-------------------
  641408   | 2023-07-10 13:20:51 | 0                       | 0       | 0          |          |          |                         |                        |                           | 0                    | 0            | 0            | 0            | 0               | 0              | Wait for connection | 0
  641408   | 2023-07-10 13:20:51 | 0                       | 0       | 1          |          |          |                         |                        |                           | 0                    | 0            | 0            | 0            | 0               | 0              | Wait for connection | 0
@@ -502,7 +502,7 @@ test=# show pool_pools;
 (128 rows)
 ```
 
-# SHOW POOL_VERSION
+# SHOW_POOL_VERSION
 
 ## 名字
 
@@ -526,7 +526,7 @@ pool_version
 (1 row)
 ```
 
-# SHOW POOL_CACHE
+# SHOW_POOL_CACHE
 
 ## 名字
 
@@ -540,7 +540,7 @@ SHOW POOL_CACHE
 
 ## 描述
 
-`SHOW POOL_CACHE` displays [in memory query cache ](https://www.pgpool.net/docs/latest/en/html/runtime-in-memory-query-cache.html)statistics if in memory query cache is enabled. Here is an example session: See [Table 1](https://www.pgpool.net/docs/latest/en/html/sql-show-pool-cache.html#SHOW-POOL-CACHE-TABLE) for a description of each item.
+`SHOW POOL_CACHE` displays [in memory query cache](https://www.pgpool.net/docs/latest/en/html/runtime-in-memory-query-cache.html)statistics if in memory query cache is enabled. Here is an example session: See [Table 1](https://www.pgpool.net/docs/latest/en/html/sql-show-pool-cache.html#SHOW-POOL-CACHE-TABLE) for a description of each item.
 
 ```sql
 test=# \x
@@ -576,7 +576,7 @@ fragment_cache_entries_size | 0
 | `free_cache_entries_size`     | The size in bytes of the unused cache. As this value approaches 0, it removes the registered cache and registers a new cache, which does not cause an error, but reduces performance. Consider to increase [memqcache_total_size](https://www.pgpool.net/docs/latest/en/html/runtime-in-memory-query-cache.html#GUC-MEMQCACHE-TOTAL-SIZE). |
 | `fragment_cache_entries_size` | The size in bytes of the fragmented cache. When a registered cache is evicted, the space becomes fragmented until the next time that block is reused. Pgpool-II writes cache in fixed-size blocks specified by [memqcache_cache_block_size](https://www.pgpool.net/docs/latest/en/html/runtime-in-memory-query-cache.html#GUC-MEMQCACHE-CACHE-BLOCK-SIZE). When a registered cache is evicted, the space becomes fragmented until the next time that block is reused. `fragment_cache_entries_size` displays the total size of such fragmented regions. |
 
-# SHOW POOL_HEALTH_CHECK_STATS
+# SHOW_POOL_HEALTH_CHECK_STATS
 
 ## 名字
 
@@ -594,7 +594,7 @@ SHOW POOL_HEALTH_CHECK_STATS
 
 [表1](https://www.pgpool.net/docs/latest/en/html/sql-show-pool-health-check-stats.html#HEALTH-CHECK-STATS-DATA-TABLE)显示了每个列名及其描述。
 
-**Table 1. Statistics data shown by pool_health_check_stats command**
+表1 pool_health_check_stats命令显示的统计数据
 
 | 列名                         | 描述                                                         |
 | ---------------------------- | ------------------------------------------------------------ |
@@ -642,8 +642,8 @@ min_duration                 | 2
 average_duration             | 6.296296
 last_health_check            | 2020-01-26 19:12:45
 last_successful_health_check | 2020-01-26 19:12:45
-last_skip_health_check       | 
-last_failed_health_check     | 
+last_skip_health_check       |
+last_failed_health_check     |
 -[ RECORD 2 ]----------------+--------------------
 node_id                      | 1
 hostname                     | /tmp
@@ -667,7 +667,7 @@ last_skip_health_check       | 2020-01-26 19:12:48
 last_failed_health_check     | 2020-01-26 19:11:48
 ```
 
-# SHOW POOL_BACKEND_STATS
+# SHOW_POOL_BACKEND_STATS
 
 ## 名字
 
@@ -689,7 +689,7 @@ select_cnt、insert_cnt、update_cnt、delete_cnt、ddl_cnt、other_cnt是自Pgp
 
 ```sql
 test=# show pool_backend_stats;
- node_id | hostname | port  | status |  role   | select_cnt | insert_cnt | update_cnt | delete_cnt | ddl_cnt | other_cnt | panic_cnt | fatal_cnt | error_cnt 
+ node_id | hostname | port  | status |  role   | select_cnt | insert_cnt | update_cnt | delete_cnt | ddl_cnt | other_cnt | panic_cnt | fatal_cnt | error_cnt
 ---------+----------+-------+--------+---------+------------+------------+------------+------------+---------+-----------+-----------+-----------+-----------
  0       | /tmp     | 11002 | up     | primary | 12         | 10         | 30         | 0          | 2       | 30        | 0         | 0         | 1
  1       | /tmp     | 11003 | up     | standby | 12         | 0          | 0          | 0          | 0       | 23        | 0         | 0         | 1
